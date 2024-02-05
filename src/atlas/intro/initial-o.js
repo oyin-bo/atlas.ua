@@ -29,11 +29,14 @@ export function createInitialO() {
   function resizeDebouncedWithAnimationFrame() {
     if (!visualViewport) return;
 
-    oElement.textContent =
+    const msg =
       'xy ' + visualViewport.pageLeft + ':' + visualViewport.offsetLeft + ' x ' + visualViewport.pageTop + ':' + visualViewport.offsetTop + ' \n' +
       'sz ' + visualViewport.width + ' x ' + visualViewport.height + ' \n' +
       '*' + visualViewport.scale + '\n\n' +
       JSON.stringify(calcO(), null, 2);
+    oElement.onclick = () => {
+      alert(msg);
+    };
     
     const pos = calcO();
 
