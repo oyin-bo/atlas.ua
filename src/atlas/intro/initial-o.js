@@ -49,8 +49,15 @@ export function createInitialO() {
   function calcO() {
     const bgWidth = 3840;
     const bgHeight = 2847;
-    const wWidth = document.documentElement.clientWidth // window.innerWidth;
-    const wHeight = window.innerHeight * 0.9; // page1 height is clamped at 90% of window height
+    const wWidth =
+      visualViewport ?
+        visualViewport.width * visualViewport.scale :
+        document.documentElement.clientWidth // window.innerWidth;
+    const wHeight =
+      (visualViewport ?
+        visualViewport.height * visualViewport.scale :
+        window.innerHeight)
+      * 0.9; // page1 height is clamped at 90% of window height
 
     const scale = wWidth / wHeight > bgWidth / bgHeight ?
       wWidth / bgWidth : // window so wide
