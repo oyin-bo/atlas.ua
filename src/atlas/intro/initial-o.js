@@ -1,6 +1,8 @@
 // @ts-check
 
 export function createInitialO() {
+  const page1 = /** @type {HTMLElement} */(document.querySelector('.page1'));
+
   visualViewport?.addEventListener('resize', handleResize);
   visualViewport?.addEventListener('scroll', handleResize);
   window.addEventListener('resize', handleResize);
@@ -29,16 +31,18 @@ export function createInitialO() {
   function resizeDebouncedWithAnimationFrame() {
     if (!visualViewport) return;
 
+    const pos = calcO();
+
     const msg =
       'xy ' + visualViewport.pageLeft + ':' + visualViewport.offsetLeft + ' x ' + visualViewport.pageTop + ':' + visualViewport.offsetTop + ' \n' +
       'sz ' + visualViewport.width + ' x ' + visualViewport.height + ' \n' +
       '*' + visualViewport.scale + '\n\n' +
-      JSON.stringify(calcO(), null, 2);
+      'ratio: ' + pos.width / pos.height + '\n' +
+      JSON.stringify(pos, null, 2);
+
     oElement.onclick = () => {
       alert(msg);
     };
-    
-    const pos = calcO();
 
     oElement.style.left = pos.left + 'px';
     oElement.style.top = pos.top + 'px';
@@ -49,15 +53,16 @@ export function createInitialO() {
   function calcO() {
     const bgWidth = 3840;
     const bgHeight = 2847;
-    const wWidth =
-      visualViewport ?
-        visualViewport.width * visualViewport.scale :
-        document.documentElement.clientWidth // window.innerWidth;
-    const wHeight =
-      (visualViewport ?
-        visualViewport.height * visualViewport.scale :
-        window.innerHeight)
-      * 0.9; // page1 height is clamped at 90% of window height
+    const page1Bounds = page1.getBoundingClientRect();
+    const wWidth = page1Bounds.width;
+      // visualViewport ?
+      //   visualViewport.width * visualViewport.scale :
+      //   document.documentElement.clientWidth // window.innerWidth;
+    const wHeight = page1Bounds.height;
+      // (visualViewport ?
+      //   visualViewport.height * visualViewport.scale :
+      //   window.innerHeight)
+      // * 0.9; // page1 height is clamped at 90% of window height
 
     const scale = wWidth / wHeight > bgWidth / bgHeight ?
       wWidth / bgWidth : // window so wide
